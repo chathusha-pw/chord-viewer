@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="si">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#16161a">
+  <title>Chord Viewer</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@400;600&family=Noto+Sans:wght@400;600;700&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="toolbar" id="toolbar">
+    <div class="toolbar-row">
+      <button class="icon-btn" id="back" aria-label="Back to songs" hidden>&#8249;</button>
+      <h1 id="page-title">Songs</h1>
+      <div class="toolbar-actions">
+        <button class="icon-btn" id="font-down" aria-label="Smaller text" hidden>A&#8722;</button>
+        <button class="icon-btn" id="font-up" aria-label="Larger text" hidden>A+</button>
+        <button class="icon-btn" id="awake" aria-label="Keep screen on" aria-pressed="false" hidden>&#9788;</button>
+        <button class="icon-btn" id="theme" aria-label="Switch theme">&#9680;</button>
+      </div>
+    </div>
+    <div class="toolbar-row transpose-bar" id="transpose-bar" hidden>
+      <span class="bar-label" id="global-label">Transpose</span>
+      <div class="stepper">
+        <button id="global-down" aria-label="Down a semitone">&#8722;</button>
+        <output id="global-value">0</output>
+        <button id="global-up" aria-label="Up a semitone">+</button>
+      </div>
+      <select id="unify" aria-label="Put every song in one key" hidden></select>
+      <button class="icon-btn" id="reset" aria-label="Reset key" title="Reset key">&#8634;</button>
+    </div>
+  </header>
+
+  <main id="app"></main>
+
+  <template id="library-template">
+    <div class="library">
+      <input type="search" id="search" placeholder="Search songs" autocomplete="off">
+      <ul class="song-list" id="song-list"></ul>
+    </div>
+  </template>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

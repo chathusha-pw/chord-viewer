@@ -1,0 +1,340 @@
+:root {
+  --scale: 1;
+  --bg: #fbfaf7;
+  --surface: #ffffff;
+  --text: #1c1b19;
+  --muted: #6b6760;
+  --line: #e4e1da;
+  --chord: #b4410c;
+  --accent: #b4410c;
+  --chorus-bar: #e8a37a;
+  --btn: #efece6;
+  --btn-active: #e2ddd3;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #121214;
+    --surface: #1b1b1f;
+    --text: #ecebe8;
+    --muted: #9a978f;
+    --line: #2c2c31;
+    --chord: #ffb35c;
+    --accent: #ffb35c;
+    --chorus-bar: #8a5a2b;
+    --btn: #26262b;
+    --btn-active: #33333a;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #121214;
+  --surface: #1b1b1f;
+  --text: #ecebe8;
+  --muted: #9a978f;
+  --line: #2c2c31;
+  --chord: #ffb35c;
+  --accent: #ffb35c;
+  --chorus-bar: #8a5a2b;
+  --btn: #26262b;
+  --btn-active: #33333a;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Noto Sans", "Noto Sans Sinhala", "Nirmala UI", "Iskoola Pota", system-ui, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button,
+select,
+input {
+  font: inherit;
+  color: inherit;
+}
+
+/* ---------- Toolbar ---------- */
+
+.toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+  padding: max(6px, env(safe-area-inset-top)) 12px 6px;
+}
+
+.toolbar-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+}
+
+.toolbar h1 {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.toolbar-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.icon-btn,
+.stepper button {
+  min-width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--btn);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.icon-btn:active,
+.stepper button:active {
+  background: var(--btn-active);
+}
+
+#back {
+  font-size: 1.6rem;
+  line-height: 1;
+  padding-bottom: 4px;
+}
+
+#awake[aria-pressed="true"] {
+  color: var(--bg);
+  background: var(--accent);
+}
+
+.transpose-bar {
+  flex-wrap: wrap;
+  row-gap: 6px;
+  font-size: 0.9rem;
+}
+
+.bar-label {
+  color: var(--muted);
+}
+
+.stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.stepper output {
+  min-width: 2.4em;
+  text-align: center;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.stepper.small button {
+  min-width: 34px;
+  height: 34px;
+}
+
+#unify {
+  height: 40px;
+  padding: 0 6px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--btn);
+  color: var(--text);
+  font-weight: 600;
+}
+
+#reset {
+  margin-left: auto;
+  font-size: 1.25rem;
+}
+
+/* ---------- Library ---------- */
+
+.library {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 12px 16px 40px;
+}
+
+#search {
+  width: 100%;
+  height: 44px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.song-list {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+}
+
+.song-link {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 14px 4px;
+  border-bottom: 1px solid var(--line);
+  color: inherit;
+  text-decoration: none;
+}
+
+.song-title {
+  font-weight: 600;
+}
+
+.song-sub {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.empty {
+  color: var(--muted);
+  padding: 20px 4px;
+}
+
+/* ---------- Song sheet ---------- */
+
+.sheet {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 8px 16px 50vh;
+  font-size: calc(18px * var(--scale));
+}
+
+.part + .part {
+  margin-top: 2.2em;
+  padding-top: 1em;
+  border-top: 2px solid var(--line);
+}
+
+.part-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  margin: 0.6em 0 0.4em;
+  font-size: 15px;
+}
+
+.part-name {
+  flex-basis: 100%;
+  margin: 0;
+  font-size: calc(1.15em * var(--scale));
+}
+
+.key-chip {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--btn);
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.section {
+  margin: 0.9em 0;
+}
+
+.section[data-type="chorus"] {
+  padding-left: 0.8em;
+  border-left: 3px solid var(--chorus-bar);
+}
+
+.section-label {
+  margin: 0 0 0.25em;
+  color: var(--muted);
+  font-size: 0.72em;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.comment {
+  color: var(--muted);
+  font-style: italic;
+  font-size: 0.85em;
+  margin: 0.3em 0;
+}
+
+.blank {
+  height: 0.7em;
+}
+
+.line {
+  margin: 0 0 0.2em;
+  line-height: 1.35;
+  font-family: "Noto Sans Sinhala", "Nirmala UI", "Iskoola Pota", "Noto Sans", sans-serif;
+}
+
+.w {
+  display: inline-flex;
+  white-space: nowrap;
+  vertical-align: bottom;
+}
+
+.seg {
+  display: inline-flex;
+  flex-direction: column;
+}
+
+.c {
+  display: block;
+  min-height: 1.3em;
+  padding-right: 0.45em;
+  color: var(--chord);
+  font-family: "Noto Sans", system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 0.92em;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+.l {
+  display: block;
+  min-height: 1.35em;
+  white-space: pre;
+}
+
+.no-chords .c {
+  display: none;
+}
+
+.chords-only {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 1.1em;
+}
+
+.chords-only .c {
+  padding-right: 0;
+}

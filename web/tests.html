@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Chord Viewer Tests</title>
+  <style>
+    body { font: 14px/1.5 system-ui, sans-serif; margin: 16px; }
+    .pass { color: #15803d; }
+    .fail { color: #b91c1c; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <h1>Chord Viewer tests</h1>
+  <p id="summary">Running…</p>
+  <ol id="results"></ol>
+  <script type="module">
+    import { transposeChord, parseKey, keyName, guessKey, transposeKey, semitonesBetween } from "./js/chords.js";
+    import { parseChordPro, chordsIn } from "./js/chordpro.js";
+
+    const results = [];
+    const eq = (name, actual, expected) => results.push({ name, ok: JSON.stringify(actual) === JSON.stringify(expected), actual, expected });
+    const t = (chord, n, key) => transposeChord(chord, n, parseKey(key));
+
+    eq("D up 1 in Eb", t("D", 1, "Eb"), "Eb");
+    eq("D down 1 in Db", t("D", -1, "Db"), "Db");
+    eq("C# respelled in Fm", t("C#", 0, "Fm"), "Db");
+    eq("Bbm up 2 in Gm", t("Bbm", 2, "Gm"), "Cm");
+    eq("F#m7 in A", t("F#m7", 0, "A"), "F#m7");
+    eq("slash chord", t("D/F#", 2, "E"), "E/G#");
+    eq("bVII in G", t("F", 0, "G"), "F");
+    eq("bIII in G", t("A#", 0, "G"), "Bb");
+    eq("leading tone in Am", t("G#dim", 0, "Am"), "G#dim");
+    eq("V in F#", t("Db7", 0, "F#"), "C#7");
+    eq("IV in Gb avoids Cb", t("B", 0, "Gb"), "B");
+    eq("non-chord untouched", t("N.C.", 3, "C"), "N.C.");
+    eq("sus/add kept", t("Asus4", -2, "G"), "Gsus4");
+
+    eq("key name Ebm", keyName(parseKey("Ebm")), "Ebm");
+    eq("transpose key", keyName(transposeKey(parseKey("D"), 1)), "Eb");
+    eq("semitones D->G", semitonesBetween(parseKey("D"), 7), 5);
+    eq("semitones Eb->D", semitonesBetween(parseKey("Eb"), 2), -1);
+
+    eq("guess D", keyName(guessKey(["D", "A", "D", "G", "A", "D"])), "D");
+    eq("guess Eb", keyName(guessKey(["Eb", "Bb", "Ab", "Bb", "Eb"])), "Eb");
+    eq("guess C over Am", keyName(guessKey(["C", "F", "Am", "G", "F", "G", "C"])), "C");
+    eq("guess Fm", keyName(guessKey(["Fm", "C", "Bbm", "C#", "Ab", "Eb", "Fm"])), "Fm");
+    eq("guess Em", keyName(guessKey(["Em", "Em", "G", "Em", "G"])), "Em");
+
+    const song = parseChordPro(`{title: Test}
+{x_song: One}
+{key: G}
+{start_of_chorus: Chorus}
+[G]hello [C]world[D]
+{end_of_chorus}
+{x_song: Two}
+{comment: Break}
+[Am] [F] [G]`);
+    eq("title", song.title, "Test");
+    eq("two songs", song.songs.map((s) => s.name), ["One", "Two"]);
+    eq("declared key", song.songs[0].key, "G");
+    eq("section", song.songs[0].sections[0].type, "chorus");
+    eq("segments", song.songs[0].sections[0].lines[0].segments,
+      [{ chord: "G", text: "hello " }, { chord: "C", text: "world" }, { chord: "D", text: "" }]);
+    eq("chords in part", chordsIn(song.songs[1]), ["Am", "F", "G"]);
+
+    const failed = results.filter((r) => !r.ok);
+    document.getElementById("summary").textContent = `${results.length - failed.length}/${results.length} passed`;
+    document.getElementById("summary").className = failed.length ? "fail" : "pass";
+    for (const r of results) {
+      const li = document.createElement("li");
+      li.className = r.ok ? "pass" : "fail";
+      li.textContent = r.ok ? r.name : `${r.name}: got ${JSON.stringify(r.actual)}, expected ${JSON.stringify(r.expected)}`;
+      document.getElementById("results").append(li);
+    }
+  </script>
+</body>
+</html>
